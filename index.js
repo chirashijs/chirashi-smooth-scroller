@@ -373,6 +373,7 @@ export class SmoothScroller {
         this.viewport.hWidth = this.viewport.width / 2
         this.viewport.hHeight = this.viewport.height / 2
 
+        if (this.fakeScroll) size(this.fakeScroll, {width:0,height:0})
         this.elementSize = size(this.element)
         this.parentSize = size(this.parent)
 
@@ -393,7 +394,7 @@ export class SmoothScroller {
             this.target.x = this.scroll.x = this.xRatio * this.scrollableSize.width
         }
 
-        size(this.fakeScroll, this.elementSize)
+        if (this.fakeScroll) size(this.fakeScroll, this.elementSize)
 
         forEach(this._parallax, (parallax) => {
             let eSize = size(parallax.element),
