@@ -223,6 +223,8 @@ export class SmoothScroller {
             if (this.autoScroll) {
                 this.scrollEnabled = true
                 this.autoScroll = false
+
+                if (this.scrollToCallback) this.scrollToCallback()
             }
 
             return
@@ -330,7 +332,8 @@ export class SmoothScroller {
         this.applyScroll()
     }
 
-    scrollTo(target) {
+    scrollTo(target, callback) {
+        this.scrollToCallback = callback || null
         this.scrollEnabled = false
         this.autoScroll = true
         this.setNewTarget(target)
