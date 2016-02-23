@@ -50,26 +50,20 @@ export class SmoothScroller {
         this.scrollCallbacks = []
         this.resizeCallbacks = []
 
-        this.localCallback = this.scrolling.bind(this)
-        this.scrollEvents = new ScrollEvents()
-        this.scrollEvents.on(this.localCallback)
-
         this.element = getElement(this.config.element)
+        this.parent = parent(this.element)
+
+        this.localCallback = this.scrolling.bind(this)
+        this.scrollEvents = new ScrollEvents({element:this.parent})
+        this.scrollEvents.on(this.localCallback)
 
         this.ease = this.config.ease
         this.autoEase = this.config.autoEase
         this.scrollEnabled = true
 
-        this.parent = parent(this.element)
         addClass(this.parent, 'smooth-scroll-container')
         style(this.parent, {
             position: 'relative'
-        })
-
-        style(this.element, {
-            position: 'fixed',
-            top: 0,
-            left: 0
         })
 
         this.scroll = { x: 0, y: 0 }
@@ -77,6 +71,12 @@ export class SmoothScroller {
 
         if (this.config.scrollbar) {
             if (this.sizeblock = this.config.scrollbar == 'natives') {
+                style(this.element, {
+                    position: 'fixed',
+                    top: 0,
+                    left: 0
+                })
+
                 this.fakeScroll = append(this.parent, '<div class="fake-scroll"></div>')
 
                 if (this.config.direction == 'auto') {
@@ -92,9 +92,15 @@ export class SmoothScroller {
                 }
             }
             else {
-                this.scrollbar = {}
+                style(this.element, {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                })
 
                 style(this.parent, {'overflow':'hidden'})
+
+                this.scrollbar = {}
 
                 if (this.config.direction == 'auto' || this.config.direction == 'vertical'){
                     let scrollbarElement = append(this.parent, '<div class="scrollbar vertical"></div>'),
@@ -138,6 +144,15 @@ export class SmoothScroller {
                     this.dragHCallbacks = drag(scrollbarElement, handleScrollCursor, handleScrollCursor)
                 }
             }
+        }
+        else {
+            style(this.element, {
+                position: 'absolute',
+                top: 0,
+                left: 0
+            })
+
+            style(this.parent, {'overflow':'hidden'})
         }
 
         this._fixed = []
@@ -423,7 +438,7 @@ export class SmoothScroller {
                     element: element,
                     initial: {
                         x: this.scroll.x,
-                        y: this.scroll.y                        
+                        y: this.scroll.y
                     }
                 })
             }
@@ -438,6 +453,8 @@ export class SmoothScroller {
             let i = this._fixed.length, done = false
 
             let index = this._fixed.indexOf(element)
+
+            if (index == -1) return
 
             if (!keepTransform) {
                 this._fixed.splice(index, 1)
