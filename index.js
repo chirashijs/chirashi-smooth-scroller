@@ -421,7 +421,10 @@ export class SmoothScroller {
                 this._fixed.push({
                     update: true,
                     element: element,
-                    initial: this.scroll
+                    initial: {
+                        x: this.scroll.x,
+                        y: this.scroll.y                        
+                    }
                 })
             }
             else {
