@@ -262,8 +262,8 @@ export class SmoothScroller {
             parallax.position.left -= this.delta.x
 
             translate(parallax.element, {
-                x: this.xRatio != -1 ? (parallax.position.left - this.viewport.hWidth) * parallax.depth : 0,
-                y: this.yRatio != -1 ? (parallax.position.top - this.viewport.hHeight) * parallax.depth : 0
+                x: this.xRatio != -1 ? (parallax.position.left - this.viewport.hWidth) * parallax.ratio : 0,
+                y: this.yRatio != -1 ? (parallax.position.top - this.viewport.hHeight) * parallax.ratio : 0
             })
         })
 
@@ -415,8 +415,8 @@ export class SmoothScroller {
         if (this.fakeScroll) size(this.fakeScroll, this.elementSize)
 
         forEach(this._parallax, (parallax) => {
-            let eSize = size(parallax.element),
-                screenPos = screenPosition(parallax.element)
+            let eSize = size(parallax.container),
+                screenPos = screenPosition(parallax.container)
 
             parallax.position = {
                 left: screenPos.left + eSize.width/2,
@@ -473,13 +473,26 @@ export class SmoothScroller {
         })
     }
 
-    parallaxElements(elements, depth) {
+    parallaxElements(elements, options) {
+        let ratio = (typeof options == 'object') ? options.ratio : options,
+            container = !!options.group ? closest(elements, '.'+options.group) : null,
+            eSize, screenPos
+
+        if (options.group) {
+            eSize = size(container)
+            screenPos = screenPosition(container)
+        }
+
         forElements(elements, (element) => {
-            let eSize = size(element),
+            if (!container) {
+                eSize = size(element)
                 screenPos = screenPosition(element)
+            }
+
             this._parallax.push({
+                container: container || element,
                 element: element,
-                depth: depth,
+                ratio: ratio,
                 position: {
                     left: screenPos.left + eSize.width/2,
                     top: screenPos.top + eSize.height/2
@@ -488,7 +501,7 @@ export class SmoothScroller {
         })
     }
 
-    unparallaxElements(elements, depth) {
+    unparallaxElements(elements, options) {
         forElements(elements, (element) => {
             let i = this._parallax.length, done = false
 
