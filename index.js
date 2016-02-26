@@ -261,9 +261,19 @@ export class SmoothScroller {
             parallax.position.top -= this.delta.y
             parallax.position.left -= this.delta.x
 
+            parallax.center.top -= this.delta.y
+            parallax.center.left -= this.delta.x
+
+            let deltaX = this.xRatio != -1 ? (parallax.center.left - this.viewport.hWidth) * parallax.ratio : 0,
+                deltaY = this.yRatio != -1 ? (parallax.center.top - this.viewport.hHeight) * parallax.ratio : 0
+
+            // if (parallax.position.top >= parallax.size.height - deltaY &&
+            //     parallax.position.top <= this.viewport.height - deltaY &&
+            //     parallax.position.left >= parallax.size.width - deltaX &&
+            //     parallax.position.left <= parallax.size.width - deltaX)
             translate(parallax.element, {
-                x: this.xRatio != -1 ? (parallax.position.left - this.viewport.hWidth) * parallax.ratio : 0,
-                y: this.yRatio != -1 ? (parallax.position.top - this.viewport.hHeight) * parallax.ratio : 0
+                x: deltaX,
+                y: deltaY
             })
         })
 
@@ -418,7 +428,9 @@ export class SmoothScroller {
             let eSize = size(parallax.container),
                 screenPos = screenPosition(parallax.container)
 
-            parallax.position = {
+            parallax.size = eSize
+            parallax.position = screenPos
+            parallax.center = {
                 left: screenPos.left + eSize.width/2,
                 top: screenPos.top + eSize.height/2
             }
@@ -431,7 +443,7 @@ export class SmoothScroller {
 
     fixElements(elements) {
         forElements(elements, (element) => {
-            let index = this._fixed.indexOf(element)
+            let index = this.indexOf(this._fixed, element)
 
             if (index == -1) {
                 let elOffset = offset(element)
@@ -451,11 +463,18 @@ export class SmoothScroller {
         })
     }
 
+    indexOf(list, item) {
+        let i = list.length
+        while(i-- && list[i].element != item) {}
+
+        return i
+    }
+
     unfixElements(elements, keepTransform = false) {
         forElements(elements, (element) => {
             let i = this._fixed.length, done = false
 
-            let index = this._fixed.indexOf(element)
+            let index = this.indexOf(this._fixed, element)
 
             if (index == -1) return
 
@@ -493,7 +512,9 @@ export class SmoothScroller {
                 container: container || element,
                 element: element,
                 ratio: ratio,
-                position: {
+                size: eSize,
+                position: screenPos,
+                center: {
                     left: screenPos.left + eSize.width/2,
                     top: screenPos.top + eSize.height/2
                 }
@@ -505,7 +526,7 @@ export class SmoothScroller {
         forElements(elements, (element) => {
             let i = this._parallax.length, done = false
 
-            let index = this.indexOf(element)
+            let index = this.indexOf(this._parallax, element)
 
             if (index == -1) return
 
