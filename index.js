@@ -352,10 +352,29 @@ export class SmoothScroller {
     }
 
     setNewTarget(target) {
-        this.target = {
-            x: 'x' in target ? Math.min(Math.max(target.x, 0), this.scrollableSize.width) : this.target.x,
-            y: 'y' in target ? Math.min(Math.max(target.y, 0), this.scrollableSize.height) : this.target.y
+        if (!this.scrollableSize) this.resize()
+
+        if ('x' in target) {
+            target.x = range(target.x, 0, this.scrollableSize.width)
         }
+        else if ('ratioX' in target) {
+            target.x = target.ratioX * this.scrollableSize.width
+        }
+        else {
+            target.x = this.target.x
+        }
+
+        if ('y' in target) {
+            target.y = range(target.y, 0, this.scrollableSize.height)
+        }
+        else if ('ratioY' in target) {
+            target.y = target.ratioY * this.scrollableSize.height
+        }
+        else {
+            target.y = this.target.y
+        }
+
+        this.target = target
 
         this.delta = {
             x: -(this.target.x - this.scroll.x),
