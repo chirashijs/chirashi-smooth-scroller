@@ -220,12 +220,7 @@ export class SmoothScroller {
         ease = this.autoScroll ? this.config.autoEase : this.config.ease
 
         if (!(this.updating = Math.abs(dy) > 0.1 || Math.abs(dx) > 0.1)) {
-            if (this.autoScroll) {
-                this.scrollEnabled = true
-                this.autoScroll = false
-
-                if (this.scrollToCallback) this.scrollToCallback()
-            }
+            this.stopAutoScroll()
 
             return
         }
@@ -555,6 +550,15 @@ export class SmoothScroller {
                 transform: ''
             })
         })
+    }
+
+    stopAutoScroll() {
+        if (!this.autoScroll) return
+
+        this.scrollEnabled = true
+        this.autoScroll = false
+
+        if (this.scrollToCallback) this.scrollToCallback()
     }
 
     enableScroll() {
