@@ -585,7 +585,8 @@ export class SmoothScroller {
         style(this.element, {
             position: '',
             top: '',
-            left: ''
+            left: '',
+            transform: ''
         })
 
         forEach(this._fixed, fixed => {
