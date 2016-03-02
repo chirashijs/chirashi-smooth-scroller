@@ -391,8 +391,14 @@ export class SmoothScroller {
             this.scrollbar.vertical.cursorSize = ratio * this.scrollbar.vertical.barSize
             height(this.scrollbar.vertical.cursor, ratio*100+'%')
 
-            if (ratio == 1 || ratio == 0) hide(this.scrollbar.vertical.bar)
-            else show(this.scrollbar.vertical.bar)
+            if (ratio == 1 || ratio == 0) {
+                removeClass(this.parent, 'vertical-scroll')
+                hide(this.scrollbar.vertical.bar)
+            }
+            else {
+                addClass(this.parent, 'vertical-scroll')
+                show(this.scrollbar.vertical.bar)
+            }
         }
 
         if (this.scrollbar.horizontal) {
@@ -401,8 +407,14 @@ export class SmoothScroller {
             this.scrollbar.horizontal.cursorSize = ratio * this.scrollbar.horizontal.barSize
             width(this.scrollbar.horizontal.cursor, ratio*100+'%')
 
-            if (ratio == 1 || ratio == 0) hide(this.scrollbar.horizontal.bar)
-            else show(this.scrollbar.horizontal.bar)
+            if (ratio == 1 || ratio == 0) {
+                removeClass(this.parent, 'horizontal-scroll')
+                hide(this.scrollbar.horizontal.bar)
+            }
+            else {
+                addClass(this.parent, 'horizontal-scroll')
+                show(this.scrollbar.horizontal.bar)
+            }
         }
     }
 
