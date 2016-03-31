@@ -17,7 +17,6 @@ import style from 'chirashi/src/styles/style'
 import height from 'chirashi/src/styles/height'
 import width from 'chirashi/src/styles/width'
 import size from 'chirashi/src/styles/size'
-import translate from 'chirashi/src/styles/translate'
 import offset from 'chirashi/src/styles/offset'
 import screenPosition from 'chirashi/src/styles/screen-position'
 import hide from 'chirashi/src/styles/hide'
@@ -39,6 +38,33 @@ let defaults = {
     autoEase: 0.08,
     fixed: []
 }
+
+function translate2d(element, transformation, keep) {
+    if (!element.style) return
+
+    let style = 'translate('+ (transformation.x || 0) +'px,'+ (transformation.y) || 0 +'px)'
+    element.style[prefix+'transform'] = style
+    element.style.transform = style
+}
+
+function translate3d(element, transformation, keep) {
+    if (!element.style) return
+
+    let style = 'translate3d('+ (transformation.x || 0) +'px,'+ (transformation.y || 0) +'px,'+ (transformation.z || 0) +'px)'
+    element.style[prefix+'transform'] = style
+    element.style.transform = style
+}
+
+const prefix = '-'+(Array.prototype.slice
+  .call(window.getComputedStyle(document.documentElement, ''))
+  .join('')
+  .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
+)[1]+'-'
+document.documentElement.style[prefix+'transform'] = 'translate3d(0, 0, 0)'
+const use2d = !document.documentElement.style[prefix+'transform']
+document.documentElement.style[prefix+'transform'] = ''
+
+const translate = use2d ? translate2d : translate3d
 
 export class SmoothScroller {
     constructor(config) {
