@@ -42,7 +42,7 @@ let defaults = {
 function translate2d(element, transformation, keep) {
     if (!element.style) return
 
-    let style = 'translate('+ (transformation.x || 0) +'px,'+ (transformation.y) || 0 +'px)'
+    let style = 'translate('+ (transformation.x || 0) +'px,'+ (transformation.y) || 0 +'px) rotate(.0001deg)'
     element.style[prefix+'transform'] = style
     element.style.transform = style
 }
@@ -50,7 +50,7 @@ function translate2d(element, transformation, keep) {
 function translate3d(element, transformation, keep) {
     if (!element.style) return
 
-    let style = 'translate3d('+ (transformation.x || 0) +'px,'+ (transformation.y || 0) +'px,'+ (transformation.z || 0) +'px)'
+    let style = 'translate3d('+ (transformation.x || 0) +'px,'+ (transformation.y || 0) +'px,'+ (transformation.z || 0) +'px) rotate(.0001deg)'
     element.style[prefix+'transform'] = style
     element.style.transform = style
 }
