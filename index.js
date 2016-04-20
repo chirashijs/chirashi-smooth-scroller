@@ -468,10 +468,16 @@ export class SmoothScroller {
             this.yRatio = 1.0
             this.target.y = this.scroll.y = this.yRatio * this.scrollableSize.height
         }
+        else if (this.yRatio = -1) {
+            this.target.y = this.scroll.y = 0
+        }
 
         if(this.elementSize.width - this.scroll.x < this.parentSize.width) {
             this.xRatio = 1.0
             this.target.x = this.scroll.x = this.xRatio * this.scrollableSize.width
+        }
+        else if (this.xRatio = -1) {
+            this.target.x = this.scroll.x = 0
         }
 
         if (this.fakeScroll) size(this.fakeScroll, this.elementSize)
@@ -489,6 +495,8 @@ export class SmoothScroller {
         })
 
         this.refreshScrollbars()
+
+        this.applyScroll()
 
         this.triggerCallbacks('resize')
     }
