@@ -231,8 +231,6 @@ export class SmoothScroller {
             })
         }
 
-        console.log('scrolling', event, this)
-
         this.triggerCallbacks('scroll')
 
         this.updateIfNeeded()
