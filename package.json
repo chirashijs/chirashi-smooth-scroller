@@ -1,6 +1,6 @@
 {
   "name": "chirashi-smooth-scroller",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "Smooth scroller plugin for Chirashi",
   "main": "index.js",
   "scripts": {

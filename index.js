@@ -196,7 +196,6 @@ export class SmoothScroller {
     scrolling(event) {
         if (!('yRatio' in this)) this.computeRatio()
 
-        console.log('scrolling', this.scrollEnabled)
         if (!this.scrollEnabled) {
             event.originalEvent.preventDefault()
 
