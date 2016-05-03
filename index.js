@@ -196,6 +196,7 @@ export class SmoothScroller {
     scrolling(event) {
         if (!('yRatio' in this)) this.computeRatio()
 
+        console.log('scrolling', this.scrollEnabled)
         if (!this.scrollEnabled) {
             event.originalEvent.preventDefault()
 
@@ -230,14 +231,20 @@ export class SmoothScroller {
             })
         }
 
+        console.log('scrolling', event, this)
+
         this.triggerCallbacks('scroll')
 
         this.updateIfNeeded()
     }
 
     updateIfNeeded() {
-        if (!this.updating && (Math.abs(this.delta.y) > 0.1 || Math.abs(this.delta.x) > 0.1))
+        let shouldUpdate
+
+        if (shouldUpdate = !this.updating && (Math.abs(this.delta.y) > 0.1 || Math.abs(this.delta.x) > 0.1))
             this.update()
+
+        return shouldUpdate
     }
 
     update() {
@@ -364,12 +371,16 @@ export class SmoothScroller {
     }
 
     scrollTo(target, callback) {
-        this.scrollToCallback = callback || null
-        this.scrollEnabled = false
-        this.autoScroll = true
+        this.scrollToCallback = callback || (()=>{})
+
         this.setNewTarget(target)
 
-        this.updateIfNeeded()
+        if(!(this.updateIfNeeded())) {
+            this.scrollEnabled = false
+            this.autoScroll = true
+
+            this.scrollToCallback()
+        }
     }
 
     setNewTarget(target) {
@@ -604,7 +615,7 @@ export class SmoothScroller {
         this.scrollEnabled = true
         this.autoScroll = false
 
-        if (this.scrollToCallback) this.scrollToCallback()
+        this.scrollToCallback()
     }
 
     enableScroll() {
