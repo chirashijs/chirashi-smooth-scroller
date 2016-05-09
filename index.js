@@ -80,7 +80,7 @@ export class SmoothScroller {
         this.parent = parent(this.element)
 
         this.localCallback = this.scrolling.bind(this)
-        this.scrollEvents = new ScrollEvents({element:this.parent,stopPropa:true})
+        this.scrollEvents = new ScrollEvents({element:this.parent, stopPropa:true, preventDefault:true})
         this.scrollEvents.on(this.localCallback)
 
         this.ease = this.config.ease
